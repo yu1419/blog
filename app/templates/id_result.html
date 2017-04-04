@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "page.html" as paging %}
+{% block title %}Applicant's Result{% endblock %}
+{% block page_content %}
+{{super()}}
+<div class="page-header">
+    <h1><b>{{person_id}}</b>'s application result</h1>
+</div>
+<div style="width: 10%">
+</div>
+{% if table %}
+<table class="table table-striped">
+  <tr>
+    <th>Row</th>
+    <th>Result</th>
+    <th>Rank</th>
+    <th>University</th> 
+    <th>Major</th>
+    <th>Degree</th>
+    <th>Applicant From</th>
+    <th>GPA</th>
+    <th>TOEFL</th>
+    <th>GRE</th>
+    <th>GRE AW</th>
+    <th>Received Date</th>
+    <th>Source</th>
+  </tr>
+  {% if table %}
+  {% set r = [0] %}
+  {% for (row, url) in table %}
+  <tr>
+  {% if r.append(r.pop() + 1) %}{% endif %} 
+  <td>{{r[0]}}</td>
+  {% for item in row %}
+  <td>{{item}}</td>
+  {% endfor %}
+  {% if "gter" in url %}
+  <td><a href={{url}}>Gter</a></td>
+  {% else %}
+  <td><a href={{url}}>1point3acres</a></td>
+   {% endif %}
+  </tr>
+  {% endfor %}
+  {% endif %}
+</table>
+{% endif %}
+{% endblock %}

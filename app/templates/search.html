@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Rank Search{% endblock %}
+
+{% block page_content %}
+{{super()}}
+<div class="page-header">
+    <h1>Search with University Ranking</h1>
+</div>
+<div class="form-inline">
+{{ wtf.quick_form(form) }}
+</div>
+{% if table %}
+<img src="data:image/png;base64,{{img_data}}"/>
+<table border="1", style="width:100%">
+  <tr>
+    <th>Result</th>
+    <th>University</th> 
+    <th>Major</th>
+    <th>Degree</th>
+    <th>Applicant From</th>
+    <th>GPA</th>
+    <th>TOEFL</th>
+    <th>GRE</th>
+    <th>GRE AW</th>
+    <th>Received Date</th>
+    <th>Source</th>
+  </tr>
+  {% if table %}
+  {% for (row, url) in table %}
+  <tr>
+  {% for item in row %}
+  <th>{{item}}</th>
+  {% endfor %}
+  {% if "gter" in url %}
+  <th><a href={{url}}>Gter</a></th>
+  {% else %}
+  <th><a href={{url}}>1point3acres</a></th>
+   {% endif %}
+  </tr>
+  {% endfor %}
+  {% endif %}
+</table>
+{% endif %}
+{% endblock %}
+{% block footer %}
+{% endblock %}

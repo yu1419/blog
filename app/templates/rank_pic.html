@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}Score distribution{% endblock %}
+{% block page_content %}
+<div class="page-header">
+    <h1>Score distribution</h1>
+</div>
+{% if img_data %}
+<img src="data:image/png;base64,{{img_data}}"/>
+{% endif %}
+<br> </br>
+{% endblock %}

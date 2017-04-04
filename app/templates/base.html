@@ -1,0 +1,141 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}Graduate Offfer {% endblock %}
+
+{% block head %}
+{{ super() }}
+<meta name="google-site-verification" content="XkUVI76rPeXT9ms8fMTOFWkCfGm3y9PXzlCUm4Jzkzs" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+{% endblock %}
+
+{% block navbar %}
+<div class="navbar navbar-inverse" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Graduate Offer</a>
+        </div>
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="/">Home</a></li>
+                 <li><a href="/search">Search with Ranking</a></li>
+                 <li><a href="/unisearch">Dream School Search</a></li>
+                 <li>{% if current_user.is_authenticated %}<a href="/logout">Logout</a></li>
+                 <li><a href="/change_password">Profile</a>
+                 {% else %}<a href="/login">Login</a></li><li><a href="/register">Register</a> {% endif %}</li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<style media="screen" type="text/css">
+    #start{
+        width: 50px;
+    }
+    #stop{
+    width: 50px;
+    }
+    #pic_link{
+    background-color: #efefef;
+    }
+    #SubmitButton{
+        background-color: lightpink;
+    }
+    .form-inline option {
+        margin-left: 10px;
+    }
+    .form-inline label {
+        margin-left: 10px;
+    }
+ 
+    .form-inline select {
+        width: 10px;
+    }
+    #major{
+    width:80px;   
+    }
+
+    #major option{
+     width:80px;   
+       }
+    #result{
+    width:80px;   
+    }
+
+    #result option{
+     width:80px;   
+       }
+    #degree{
+    width:80px;   
+    }
+
+    #degree option{
+     width:80px;   
+       }
+    #under{
+    width:80px;   
+    }
+
+    #under option{
+     width:80px;   
+       }
+    #sort{
+    width:80px;   
+    }
+
+    #sort option{
+     width:80px;   
+       }
+    #count{
+    width:80px;   
+    }
+
+    #count option{
+     width:80px;   
+       }
+    .footer {
+        right: 0;
+        bottom: 0;
+        left: 0;
+        padding: 1rem;
+        background-color: #efefef;
+        text-align: center;
+            }
+
+    </style>
+<div class="container">
+    {% for message in get_flashed_messages() %}
+    <div class="alert alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        {{ message }}
+    </div>
+    {% endfor %}
+
+    {% block page_content %}
+    
+{% endblock %}
+<br>
+</br>
+</div>
+{% block footer %}
+<div class = "footer">
+  <p>Credit to all the users who shared their information on <a href="http://bbs.gter.net/">Gter</a>  and <a href="http://www.1point3acres.com/bbs/">1point3acres</a> .Also thanks for the support from my girlfriend Simin.&nbsp  &nbsp This website is built with Python Flask framework and hosted on AWS. Contact information: <a href="mailto:graduateoffer.get@gmail.com">
+  graduateoffer.get@gmail.com</a>.</p>
+</div>
+{% endblock %}
+
+{% endblock %}
+
+{% block scripts %}
+{{ super() }}
+{{ moment.include_moment() }}
+{% endblock %}

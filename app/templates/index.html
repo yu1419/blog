@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Fictitious Blog{% endblock %}
+
+{% block page_content %}
+{{super()}}
+<div class="page-header">
+    <h1> Welcome to Fictitious Blog</h1>
+</div>
+<font size="3"><p> This website contains <b>{{total}}</b> graduate school application results for <b>TOP 78</b> United States universities posted on <a href="http://bbs.gter.net/">Gter</a>  and <a href="http://www.1point3acres.com/bbs/">1point3acres</a>. The Rankings of universities are cited from <a href="https://www.usnews.com/best-colleges/rankings/national-universities"> 2017 U.S. NEWS</a>. Application results are updated daily.</p></font>
+{% for img_data in datas %}
+<div>
+<div style="float:left;">
+<img src="data:image/png;base64,{{img_data}}"/>
+</div>
+{% endfor %}
+</div>
+<div style="clear: left;"">
+<p> </p>
+<font size="5">
+<a href="/search">
+Start your search by university ranking</a><br> or </br>
+<a href="/unisearch"> Have Dream School in mind?</a></font>
+</div>
+{% endblock %}
