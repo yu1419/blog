@@ -1,5 +1,5 @@
 from . import main
-from ..models import PostModel
+from ..models import PostModel, Comment_model, Register_model
 a = PostModel()
 
 
@@ -18,4 +18,5 @@ def user_post(user_id):
 @main.route("/post_id=<int:post_id>")
 def post_byID(post_id):
     result = a.by_postID(post_id)
+    b = Comment_model(post_id)
     return str(result)

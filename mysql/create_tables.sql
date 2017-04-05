@@ -5,6 +5,7 @@ create table blog.user (
   last_time datetime DEFAULT CURRENT_TIMESTAMP,
   user_id bigint NOT NULL AUTO_INCREMENT,
   real_user BOOLEAN DEFAULT 1,
+  activated BOOLEAN DEFAULT 0,
   primary key (user_id)
 )
 ;
