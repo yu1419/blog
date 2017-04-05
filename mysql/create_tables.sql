@@ -4,6 +4,7 @@ create table blog.user (
   hashed_password varchar(500) not NULL,
   last_time datetime DEFAULT CURRENT_TIMESTAMP,
   user_id bigint NOT NULL AUTO_INCREMENT,
+  real_user BOOLEAN DEFAULT 1,
   primary key (user_id)
 )
 ;

@@ -17,14 +17,14 @@ class PostModel():
                 post.append((title, content))
         return post
 
-    def by_id(self, id):
-        sql = """ select title, content from post where post_id = %s"""
+    def by_user(self, id):
+        sql = """ select title, content from post where user_id = %s"""
         result = ""
         with db.cursor() as cursor:
             cursor.execute(sql, (id))
             result = cursor.fetchall()
             post = []
-            title = item[0]
-            content = item[1][:100]
+            title = result[0]
+            content = result[1][:100]
             post.append((title, content))
         return post
