@@ -36,6 +36,8 @@ def create_app():
     app.register_blueprint(main_blueprint)
     from .auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    from .member import member as member_blueprint
+    app.register_blueprint(member_blueprint, url_prefix='/member')
     return app
 
 if __name__ == "__main__":

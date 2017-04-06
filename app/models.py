@@ -9,9 +9,9 @@ from flask_login import UserMixin
 class UserBase(object):
     def __init__(self, id):
         self.id = id  # id is email
-        self.update_userid()
+        self._update_userid()
 
-    def update_userid(self):
+    def _update_userid(self):
         sql = "select user_id from user where email = %s"
         with db.cursor() as cursor:
             cursor.execute(sql, (self.id, ))
@@ -36,6 +36,27 @@ class UserBase(object):
             for item in result:
                 ids.append(item["user_id"])
         return ids
+
+    def un_follow(self, follow_id):
+        sql = "delete from follow where follower = %s and user_id = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (follow_id, self.user_id))
+            cursor.commit()
+
+    def follow(self, follow_id):
+        sql = "insert into follow (follower, user_id ) values (%s, %s)"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (follow_id, self.user_id))
+            db.commit()
+
+    def add_comment(self, post_id, reply_to, content):
+        pass
+
+    def show_articles(self):
+        pass
+
+    def show_follower_articles(self):
+        pass
 
 
 class User(UserBase, UserMixin):
@@ -69,51 +90,36 @@ class PostModel(object):
 
 
 class Comment_model(object):
-    def __init__(self, post_id):
-        self.post_id = post_id
+    def __init__(self, comment_id):
+        self. comment_id = comment_id
 
-    def all_comments(self):
-        sql = """ select * from comment where post_id = %s"""
-        comment = []
+    def get_info(self):
+        pass
+
+
+class Single_post_model(object):
+    def __int__(self, post_id):
+        self.post_id = self.post_id
+
+    def get_comment(self):
+        sql = "select comment_id from comment where post_id = %s \
+              order by comment_time DESC"
+        result = []
         with db.cursor() as cursor:
-            cursor.execute(sql, (self.post_id))
-            comment = cursor.fetchone()
-        return comment
+            cursor.execute(sql, (self.post_id, ))
+            comment_ids = cursor.fetchall()
+            if comment_ids:
+                for comment_id in comment_ids:
+                    result.append(comment_id.get("comment_id"))
+        return result
 
-    def add_comment(self, user_id, content, reply_to=None):
-        sql = "insert into comment (user_id, reply_to_id, comment_content, post_id)\
-              values(%s, %s, %s, %s)"
+    def get_info(self):
+        sql = "select * from post where post_id = %s"
+        result = {}
         with db.cursor() as cursor:
-            cursor.execute(sql, (user_id, reply_to, content, self.post_id))
-            db.commit()
-
-
-class Register_model(object):
-    def check_email(self, email):
-        sql = "select count(*) from user where email = %s"
-        with db.cursor() as cursor:
-            cursor.execute(sql, (email,))
-            return cursor.fetchone()["count(*)"]
-
-    def check_username(self, name):
-        sql = "select count(*) from user where user_name = %s"
-        with db.cursor() as cursor:
-            cursor.execute(sql, (name,))
-            return cursor.fetchone()["count(*)"]
-
-    def register(self, username, email, password):
-        has_email = self.check_email(email)
-        has_name = self.check_username(username)
-        message = ""
-        if has_email:
-            message = "Email has already been registered\t"
-        if has_name:
-            message += "Username has already been registered"
-        if len(message) == 0:
-            hashed_password = generate_password_hash(password)
-            sql = "insert into user (user_name, email, hashed_password) \
-                  values(%s, %s, %s)"
-            with db.cursor() as cursor:
-                cursor.execute(sql, (username, email, hashed_password))
-                db.commit()
-        return message
+            cursor.execute(sql, (self.post_id, ))
+            result = cursor.fetchone()
+        self.title = result.get("title")
+        self.content = result.get("content")
+        self.post_time = result.get("post_time")
+        self.last_modified = result.get("last_modified")
