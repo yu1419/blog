@@ -1,6 +1,6 @@
 DROP TABLE IF EXISTS blog.user;
 create table blog.user (
-  user_name varchar(30) UNIQUE not NULL,
+  user_name varchar(30) UNIQUE,
   hashed_password varchar(500) not NULL,
   last_time datetime DEFAULT CURRENT_TIMESTAMP,
   user_id bigint NOT NULL AUTO_INCREMENT,
@@ -38,5 +38,14 @@ create table blog.tag(
   tag_name varchar(100) not NULL,
   pare_id bigint NOT NULL AUTO_INCREMENT,
   INDEX(tag_name),
+  primary key (pare_id)
+)
+
+DROP TABLE if EXISTS blog.follow;
+create table blog.follow(
+  user_id bigint not NULL,
+  follower bigint not NULL, #user_id who follow current user
+  pare_id bigint NOT NULL AUTO_INCREMENT,
+  follow_time datetime DEFAULT CURRENT_TIMESTAMP,
   primary key (pare_id)
 )

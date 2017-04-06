@@ -3,13 +3,49 @@ from . import db
 from .helper import general_random_password
 from pymysql.cursors import DictCursor as Dic
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import UserMixin
 
 
-class PostModel():
+class UserBase(object):
+    def __init__(self, id):
+        self.id = id  # id is email
+        self.update_userid()
+
+    def update_userid(self):
+        sql = "select user_id from user where email = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.id, ))
+            self.user_id = cursor.fetchone()["user_id"]
+
+    def follower_id(self):
+        ids = []
+        sql = "select follower from follow where user_id = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id, ))
+            result = cursor.fetchall()
+            for item in result:
+                ids.append(item["follower"])
+        return ids
+
+    def followed_id(self):
+        ids = []
+        sql = "select user_id from follow where follower = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id, ))
+            result = cursor.fetchall()
+            for item in result:
+                ids.append(item["user_id"])
+        return ids
+
+
+class User(UserBase, UserMixin):
+    pass
+
+
+class PostModel(object):
 
     def breif_post(self, start=0, total=5, id=None):
         sql = """ select * from post limit %s, %s"""
-        result = ""
         with db.cursor() as cursor:
             cursor.execute(sql, (start, total))
             post = cursor.fetchall()
@@ -17,7 +53,7 @@ class PostModel():
 
     def by_user(self, id):
         sql = """ select * from post where user_id = %s"""
-        result = ""
+        post = ""
         with db.cursor() as cursor:
             cursor.execute(sql, (id))
             post = cursor.fetchall()
@@ -32,7 +68,7 @@ class PostModel():
         return post
 
 
-class Comment_model():
+class Comment_model(object):
     def __init__(self, post_id):
         self.post_id = post_id
 
@@ -52,7 +88,7 @@ class Comment_model():
             db.commit()
 
 
-class Register_model():
+class Register_model(object):
     def check_email(self, email):
         sql = "select count(*) from user where email = %s"
         with db.cursor() as cursor:

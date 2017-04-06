@@ -27,9 +27,9 @@
                 <li><a href="/">Home</a></li>
                  <li><a href="/search">Search with Ranking</a></li>
                  <li><a href="/unisearch">Dream School Search</a></li>
-                 <li>{% if current_user.is_authenticated %}<a href="/logout">Logout</a></li>
+                 <li>{% if current_user.is_authenticated %}<a href="{{url_for('auth.logout')}}">Logout</a></li>
                  <li><a href="/change_password">Profile</a>
-                 {% else %}<a href="/login">Login</a></li><li><a href="/register">Register</a> {% endif %}</li>
+                 {% else %}<a href="{{url_for('auth.login')}}">Login</a></li><li><a href="{{url_for('auth.register')}}">Register</a> {% endif %}</li>
             </ul>
         </div>
     </div>
@@ -137,5 +137,4 @@
 
 {% block scripts %}
 {{ super() }}
-{{ moment.include_moment() }}
 {% endblock %}
