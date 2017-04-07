@@ -38,10 +38,22 @@ class UserBase(object):
         return result
 
     def update_username(self, new_name):
-        sql = "update user set user_name = %s where user_id = %s"
+        sql = "UPDATE user set user_name = %s where user_id = %s"
         with db.cursor() as cursor:
             cursor.execute(sql, (new_name, self.user_id))
             db.commit()
+
+    def add_post(self, title, content):
+        sql = "insert into post (title, content, user_id) values(%s, %s, %s)"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (title, content, self.user_id))
+            db.commit()
+            sql = "SELECT LAST_INSERT_ID()"
+            cursor.execute(sql)
+            row_id = cursor.fetchone()["LAST_INSERT_ID()"]
+            return row_id
+
+
 
 
 

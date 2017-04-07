@@ -1,9 +1,10 @@
 {% extends "bootstrap/base.html" %}
 
-{% block title %}Graduate Offfer {% endblock %}
+{% block title %}Blog{% endblock %}
 
 {% block head %}
 {{ super() }}
+{{ pagedown.include_pagedown() }}
 <meta name="google-site-verification" content="XkUVI76rPeXT9ms8fMTOFWkCfGm3y9PXzlCUm4Jzkzs" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
@@ -20,16 +21,20 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Graduate Offer</a>
+            <a class="navbar-brand" href="/">All Blogs</a>
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li><a href="/">Home</a></li>
-                 <li><a href="/search">Search with Ranking</a></li>
-                 <li><a href="/unisearch">Dream School Search</a></li>
-                 <li>{% if current_user.is_authenticated %}<a href="{{url_for('auth.logout')}}">Logout</a></li>
-                 <li><a href="/change_password">Profile</a>
-                 {% else %}<a href="{{url_for('auth.login')}}">Login</a></li><li><a href="{{url_for('auth.register')}}">Register</a> {% endif %}</li>
+                {% if current_user.is_authenticated %}
+                     <li> <a href="{{url_for('main.home')}}">Home</a></li>
+                     <li> <a href="{{url_for('main.user_post', user_id=current_user.user_id)}}">My Post</a></li>
+                     <li> <a href="{{url_for('member.profile')}}">Profile</a></li>
+                     <li> <a href="{{url_for('member.new_post')}}">New Post</a></li>
+                     <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
+                 {% else %}
+                     <li><a href="{{url_for('auth.login')}}">Login</a></li>
+                     <li><a href="{{url_for('auth.register')}}">Register</a> </li>
+                 {% endif %}
             </ul>
         </div>
     </div>
@@ -128,7 +133,7 @@
 </div>
 {% block footer %}
 <div class = "footer">
-  <p>Credit to all the users who shared their information on <a href="http://bbs.gter.net/">Gter</a>  and <a href="http://www.1point3acres.com/bbs/">1point3acres</a> .Also thanks for the support from my girlfriend Simin.&nbsp  &nbsp This website is built with Python Flask framework and hosted on AWS. Contact information: <a href="mailto:graduateoffer.get@gmail.com">
+  <p>This website is built with Python Flask framework and hosted on AWS. Contact information: <a href="mailto:graduateoffer.get@gmail.com">
   graduateoffer.get@gmail.com</a>.</p>
 </div>
 {% endblock %}

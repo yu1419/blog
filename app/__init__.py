@@ -5,6 +5,7 @@ from flask import Flask, render_template, session
 from flask import redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 from .database.connect_db import get_db
+from flask_pagedown import PageDown
 
 
 login_manager = LoginManager()
@@ -21,11 +22,11 @@ FLASKY_SLOW_DB_QUERY_TIME=0.5
 
 
 db = get_db()
-
+pagedown = PageDown()
 
 def create_app():
     app = Flask(__name__)
-
+    pagedown.init_app(app)
     bootstrap = Bootstrap(app)
     login_manager.init_app(app)
     expiration = 3600

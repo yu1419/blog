@@ -58,7 +58,7 @@ def more_home():
     return str(articles)
 
 
-@main.route("/post_id=<int:post_id>")
+@main.route("/post_id/<int:post_id>")
 def post_byID(post_id):
     post = Single_post_model(post_id)
     info = post.get_info()
