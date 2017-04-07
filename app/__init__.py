@@ -6,8 +6,8 @@ from flask import redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 from .database.connect_db import get_db
 
-login_manager = LoginManager()
 
+login_manager = LoginManager()
 SSL_DISABLE = False
 MAIL_SERVER = 'smtp.googlemail.com'
 MAIL_PORT = 587
@@ -21,6 +21,7 @@ FLASKY_SLOW_DB_QUERY_TIME=0.5
 
 
 db = get_db()
+
 
 def create_app():
     app = Flask(__name__)

@@ -1,9 +1,21 @@
 # coding: utf-8
 from . import db
-from .helper import general_random_password
-from pymysql.cursors import DictCursor as Dic
-from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import UserMixin
+from flask_login import UserMixin, AnonymousUserMixin
+from . import login_manager
+count_per_page = 5
+
+
+class AnonymousUser(AnonymousUserMixin):
+    def show_articles(self, page=1):
+        ignore = (page - 1) * count_per_page
+        sql = "select * from post order by post_time DESC limit %s, %s"
+        articles = []
+        with db.cursor() as cursor:
+            cursor.execute(sql, (ignore, count_per_page))
+            result = cursor.fetchall()
+            if result:
+                articles = result
+        return articles
 
 
 class UserBase(object):
@@ -16,6 +28,40 @@ class UserBase(object):
         with db.cursor() as cursor:
             cursor.execute(sql, (self.id, ))
             self.user_id = cursor.fetchone()["user_id"]
+
+    def info(self):
+        sql = "select * from user where user_id = %s"
+        result = {}
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id, ))
+            result = cursor.fetchone()
+        return result
+
+    def update_username(self, new_name):
+        sql = "update user set user_name = %s where user_id = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (new_name, self.user_id))
+            db.commit()
+
+
+
+    def follow(self, other_id):
+        sql = "insert into follow (user_id, follower) values (%s, %s)"
+        result = False
+        with db.cursor() as cursor:
+            cursor.execute(sql, (other_id, self.user_id))
+            db.commit()
+            result = True
+        return result
+
+    def un_follow(self, other_id):
+        sql = "delete from follow where user_id = %s and follower = %s"
+        result = False
+        with db.cursor() as cursor:
+            cursor.execute(sql, (other_id, self.user_id))
+            db.commit()
+            result = True
+        return result
 
     def follower_id(self):
         ids = []
@@ -37,26 +83,48 @@ class UserBase(object):
                 ids.append(item["user_id"])
         return ids
 
-    def un_follow(self, follow_id):
-        sql = "delete from follow where follower = %s and user_id = %s"
-        with db.cursor() as cursor:
-            cursor.execute(sql, (follow_id, self.user_id))
-            cursor.commit()
-
-    def follow(self, follow_id):
-        sql = "insert into follow (follower, user_id ) values (%s, %s)"
-        with db.cursor() as cursor:
-            cursor.execute(sql, (follow_id, self.user_id))
-            db.commit()
-
     def add_comment(self, post_id, reply_to, content):
         pass
 
-    def show_articles(self):
-        pass
+    def own_articles(self, page=1):
+        ignore = (page - 1) * count_per_page
+        sql = "select * from post where user_id = %s order by \
+               post_time DESC limit %s, %s"
+        articles = []
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id, ignore, count_per_page))
+            result = cursor.fetchall()
+            if result:
+                articles = result
+        return articles
 
-    def show_follower_articles(self):
-        pass
+    def show_articles(self, page=1):
+        ignore = (page - 1) * count_per_page
+        sql = "select * from post order by post_time DESC limit %s, %s"
+        articles = []
+        with db.cursor() as cursor:
+            cursor.execute(sql, (ignore, count_per_page))
+            result = cursor.fetchall()
+            if result:
+                articles = result
+        return articles
+
+    def show_followed_articles(self, page=1):
+        followeds = self.followed_id()
+        followeds = " or ".join(["user_id=%s" % i for i in followeds])
+        restriction = "where " + followeds
+
+        ignore = (page - 1) * count_per_page
+        sql = "select * from post {} order by post_time DESC limit %s, %s".format(restriction)
+        articles = []
+        with db.cursor() as cursor:
+            cursor.execute(sql, (ignore, count_per_page))
+            result = cursor.fetchall()
+            if result:
+                articles = result
+        return articles
+
+
 
 
 class User(UserBase, UserMixin):
@@ -98,10 +166,10 @@ class Comment_model(object):
 
 
 class Single_post_model(object):
-    def __int__(self, post_id):
-        self.post_id = self.post_id
+    def __init__(self, post_id):
+        self.post_id = post_id
 
-    def get_comment(self):
+    def get_comments(self):
         sql = "select comment_id from comment where post_id = %s \
               order by comment_time DESC"
         result = []
@@ -109,8 +177,7 @@ class Single_post_model(object):
             cursor.execute(sql, (self.post_id, ))
             comment_ids = cursor.fetchall()
             if comment_ids:
-                for comment_id in comment_ids:
-                    result.append(comment_id.get("comment_id"))
+                result = comment_ids
         return result
 
     def get_info(self):
@@ -119,7 +186,6 @@ class Single_post_model(object):
         with db.cursor() as cursor:
             cursor.execute(sql, (self.post_id, ))
             result = cursor.fetchone()
-        self.title = result.get("title")
-        self.content = result.get("content")
-        self.post_time = result.get("post_time")
-        self.last_modified = result.get("last_modified")
+        return result
+
+login_manager.anonymous_user = AnonymousUser
