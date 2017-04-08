@@ -1,8 +1,8 @@
 from . import main
 from ..models import Single_post_model, UserBase
-from flask import render_template, session
+from flask import render_template, session, jsonify
 from flask_login import current_user
-from .helper import convert_id
+from .helper import convert_id, user_basic
 
 
 @main.route("/")
@@ -17,8 +17,15 @@ def more_index():
     page = session.get("page", 0)
     session["page"] = page + 1
     current_page = session["page"]
-    articles = current_user.show_articles(current_page)
-    return str(articles)
+    articles = {}
+    articles["post"] = current_user.show_articles(current_page)
+    return jsonify(articles)
+
+
+@main.route("/user_basic/<int:user_id>")
+def user_basic_into(user_id):
+    result = user_basic(user_id)
+    return jsonify(result)
 
 
 @main.route("/user/<int:user_id>")
@@ -28,7 +35,7 @@ def user_post(user_id):
     user = UserBase(email)
     session["user_articles"] = email
     result = user.own_articles()
-    return str(result)
+    return jsonify(result)
 
 
 @main.route("/user/more_user")
@@ -38,15 +45,16 @@ def more_user():
     current_page = session["user_page"]
     email = session["user_articles"]
     user = UserBase(email)
-    articles = user.own_articles(current_page)
-    return str(articles)
+    articles = {}
+    articles["post"] = user.own_articles(current_page)
+    return jsonify(articles)
 
 
 @main.route("/home")
 def home():
     session["home_page"] = 1
     articles = current_user.show_followed_articles()
-    return str(articles)
+    return jsonify(articles)
 
 
 @main.route("/more_home")
@@ -54,8 +62,9 @@ def more_home():
     page = session.get("home_page", 0)
     session["home_page"] = page + 1
     current_page = session["home_page"]
-    articles = current_user.show_followed_articles(current_page)
-    return str(articles)
+    articles = {}
+    articles["post"] = current_user.show_followed_articles(current_page)
+    return jsonify(articles)
 
 
 @main.route("/post_id/<int:post_id>")
@@ -63,4 +72,4 @@ def post_byID(post_id):
     post = Single_post_model(post_id)
     info = post.get_info()
     info["comment"] = post.get_comments()
-    return str(info)
+    return jsonify(info)

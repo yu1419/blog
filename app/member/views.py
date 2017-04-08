@@ -1,6 +1,5 @@
 from . import member
-from ..models import PostModel
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, abort, jsonify
 from .. import login_required
 from flask_login import current_user
 from .forms import UserForm, PostForm
@@ -10,14 +9,14 @@ from .forms import UserForm, PostForm
 @member.route("/follow/<int:user_id>", methods=['GET', 'POST'])
 def follow(user_id):
     result = current_user.follow(user_id)
-    return str(result)
+    return jsonify(result)
 
 
 @login_required
 @member.route("/un_follow/<int:user_id>", methods=['GET', 'POST'])
 def un_follow(user_id):
     result = current_user.un_follow(user_id)
-    return str(result)
+    return jsonify(result)
 
 
 @login_required
@@ -28,6 +27,23 @@ def new_post():
         title = form.title.data
         row_id = current_user.add_post(title, form.pagedown.data)
         return redirect(url_for("main.post_byID", post_id=row_id))
+    return render_template("search.html", form=form)
+
+
+@login_required
+@member.route("/edit_post/<int:post_id>", methods=['GET', 'POST'])
+def edit_post(post_id):
+    current_post = current_user.get_post(post_id)
+    if not current_post:
+        abort(404)
+    form = PostForm(title=current_post["title"],
+                    pagedown=current_post["content"])
+    if form.validate_on_submit():
+        title = form.title.data
+        current_user.update_post(current_post["post_id"],
+                                 title, form.pagedown.data)
+        return redirect(url_for("main.post_byID",
+                        post_id=current_post["post_id"]))
     return render_template("search.html", form=form)
 
 

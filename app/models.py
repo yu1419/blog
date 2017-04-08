@@ -37,6 +37,21 @@ class UserBase(object):
             result = cursor.fetchone()
         return result
 
+    def get_post(self, post_id):
+        sql = "select * from post where user_id = %s and post_id = %s"
+        result = None
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id, post_id))
+            result = cursor.fetchone()
+        return result
+
+    def update_post(self, post_id, title, content):
+        sql = "update post set title = %s, content = %s \
+               where user_id = %s and post_id = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (title, content, self.user_id, post_id))
+            db.commit()
+
     def update_username(self, new_name):
         sql = "UPDATE user set user_name = %s where user_id = %s"
         with db.cursor() as cursor:
@@ -52,10 +67,6 @@ class UserBase(object):
             cursor.execute(sql)
             row_id = cursor.fetchone()["LAST_INSERT_ID()"]
             return row_id
-
-
-
-
 
     def follow(self, other_id):
         sql = "insert into follow (user_id, follower) values (%s, %s)"
@@ -127,7 +138,8 @@ class UserBase(object):
         restriction = "where " + followeds
 
         ignore = (page - 1) * count_per_page
-        sql = "select * from post {} order by post_time DESC limit %s, %s".format(restriction)
+        sql = "select * from post {} order by post_time \
+               DESC limit %s, %s".format(restriction)
         articles = []
         with db.cursor() as cursor:
             cursor.execute(sql, (ignore, count_per_page))
@@ -135,8 +147,6 @@ class UserBase(object):
             if result:
                 articles = result
         return articles
-
-
 
 
 class User(UserBase, UserMixin):
@@ -193,7 +203,8 @@ class Single_post_model(object):
         return result
 
     def get_info(self):
-        sql = "select * from post where post_id = %s"
+        sql = "select * from post, user where post_id = %s and \
+               post.user_id = user.user_id"
         result = {}
         with db.cursor() as cursor:
             cursor.execute(sql, (self.post_id, ))
