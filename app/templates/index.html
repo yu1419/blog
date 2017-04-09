@@ -1,12 +1,36 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Graduate Offer{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block page_content %}
 {{super()}}
-<div class="page-header">
-    <h1> Welcome to Blog</h1>
+<div class="page_div">
+  <div class="page-header">
+      <h1> {{title}}</h1>
+  </div>
+  {% for blog in result %}
+    <div class="pre_blog">
+      <div class="pre_title"> <a href="{{url_for("main.post_byID",post_id=blog["post_id"])}}">{{blog["title"]}}</a> 
+      </div>
+      <div class="pre_author"> 
+      	Author: <a class="author_link" href="{{url_for("main.user_post",user_id=blog["user_id"])}}">{{blog["user_name"]}}</a>
+          &#09
+      {% if not current_user.id == blog["email"] %}
+        {% if current_user.is_following(blog["user_id"]) %}
+          <a class="unfollow_link" href="{{url_for("member.un_follow",user_id=blog["user_id"])}}">Unfollow</a>
+        {% else %}
+          <a class="follow_link" href="{{url_for("member.follow",user_id=blog["user_id"])}}">Follow</a>
+        {% endif %}
+      {% endif %}
+      </div>
+      <div class="pre_time">
+      {{blog["post_time"]}}
+      </div>
+      <div class="pre_content">
+      {{Markup(markdown.markdown(blog["content"]))}}    
+       </div>
+    </div>
+{% endfor %}
 </div>
-<div> {{result}} </div>
 {% endblock %}

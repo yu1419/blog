@@ -14,13 +14,13 @@ def convert_id(id):
 
 def id_to_username(user_id):
     sql = "select user_name from user where user_id = %s"
-    user_id = None
+    user_name = None
     with db.cursor() as cursor:
-        cursor.execute(sql, user_id)
+        cursor.execute(sql, (user_id,))
         result = cursor.fetchone()
         if result:
-            user_id = result["user_name"]
-    return user_id
+            user_name = result["user_name"]
+    return user_name
 
 
 def name_to_id(user_name):

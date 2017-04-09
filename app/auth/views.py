@@ -24,7 +24,7 @@ def register():
             return redirect(url_for(".register"))
         register_user(email, password)
         return redirect(url_for("main.index"))
-    return render_template("register.html", form=form)
+    return render_template("single_form.html", form=form, title="Register")
 
 
 @auth.route("/logout")
@@ -51,4 +51,4 @@ def login():
         else:
             flash("Failed", "bad")
             return redirect(url_for(".login"))
-    return render_template("register.html", form=form)
+    return render_template("single_form.html", form=form, title="Login")

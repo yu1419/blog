@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "page.html" as paging %}
+{% block title %}{{post["title"]}}{% endblock %}
+
+{% block page_content %}
+<div class="contents">
+    <h1>{{post["title"]}} </h1>
+     <div class="pre_author">
+    	<a class="author_link" href="{{url_for("main.user_post",user_id=post["user_id"])}}">{{post["user_name"]}}</a>
+    	&#09 {{post["post_time"]}}
+    </div>
+    <div class="post_content">
+    {{Markup(markdown.markdown(post["content"]))}}   
+    </div>
+	 <div class="comment">
+	 <h4> Comments:</h4>
+	{% for comment in post["comments"] %}
+		<div class="single_comment">
+		<div class="comment_time">{{comment["comment_time"]}}</div>
+		<div>
+		<a class="author_link comment_author" href="{{url_for("main.user_post",user_id=comment["user_id"])}}">{{comment["user_name"]}}</a>:
+		{% if comment["reply_to_id"] %}
+		@<a class="replied_author_link"  href="{{url_for("main.user_post",user_id=comment["reply_to_id"])}}">{{id_to_username(comment["reply_to_id"])["user_name"]}}</a>
+		{% endif %}
+		{{Markup(markdown.markdown(comment["comment_content"]))}}
+		</div>
+		</div>
+	{% endfor %}
+	</div>
+	<div class="comment_form">
+		{{ wtf.quick_form(form) }}
+	</div>
+</div>
+{% endblock %}

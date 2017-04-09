@@ -1,0 +1,80 @@
+/*CSS For common appearance*/
+.contents{
+ background-color: hsla(45, 14%, 40%, 0.1);
+ min-height:70vh;
+}
+.page_div{
+  background-color: hsla(45, 14%, 40%, 0.1);
+  min-height:70vh;
+}
+.comment{
+	margin-left: 5%;
+	margin-top: 5.0em;
+}
+.post_content{
+  border-radius: 1.5em;
+  padding-left: 0.75em;
+  padding-right: 0.75em;
+  font-size: 1.4em;
+  background-color: hsla(0,0%,0%, 0.1);
+}
+.single_comment{
+  border-radius: 3.0em;
+  background-color: hsla(0,0%,75%,0.3);
+  padding-left: 1.5em;
+	margin-top: 1.0em;
+}
+.footer{
+	text-align: center;
+}
+.replied_author_link{
+	color: green;
+}
+.author_link{
+	color: RED;
+}
+.pre_time{
+	font-size: 0.8em;
+	text-align: right;
+	margin-bottom:0.5em;
+}
+.comment_time{
+	font-size: 0.8em;
+}
+.comment_author{
+	font-size: 1.5em;
+}
+.pre_blog{
+  border-radius: 2.0em;
+  padding-left: 2.0em;
+  padding-right: 2.0em;
+	align-content: center;
+	background-color: hsla(0, 100%, 30%, 0.05);
+  width: 90%;
+  margin-bottom: 1.0em;
+}
+.unfollow_link{
+	color: grey;
+}
+.follow_link{
+	color: green;
+}
+.pre_title {
+    font-size: 3.0em;
+    margin-left: 0px;
+}
+
+.pre_author {
+	  text-align: right;
+    font-size: 1.0em;
+}
+
+.pre_content{
+    font-size: 1.0em;
+    height: 3.0em;
+    overflow: hidden;
+}
+.single_form{
+	width: 50%;
+	min-height:60vh;
+}

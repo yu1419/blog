@@ -6,7 +6,9 @@ from flask import redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
 from .database.connect_db import get_db
 from flask_pagedown import PageDown
-
+from flaskext.markdown import Markdown
+import markdown
+from flask import Markup
 
 login_manager = LoginManager()
 SSL_DISABLE = False
@@ -24,14 +26,25 @@ FLASKY_SLOW_DB_QUERY_TIME=0.5
 db = get_db()
 pagedown = PageDown()
 
+
+def id_to_username(user_id):
+    sql = "select user_name from user where user_id = %s"
+    with db.cursor() as cursor:
+        cursor.execute(sql, (user_id, ))
+        return cursor.fetchone()
+
 def create_app():
     app = Flask(__name__)
     pagedown.init_app(app)
     bootstrap = Bootstrap(app)
     login_manager.init_app(app)
     expiration = 3600
+    Markdown(app)
 
     app.config['SECRET_KEY'] = 'hard to guess string'
+    app.jinja_env.globals['id_to_username'] = id_to_username
+    app.jinja_env.globals['markdown'] = markdown
+    app.jinja_env.globals['Markup'] = Markup
 
 
     from .main import main as main_blueprint

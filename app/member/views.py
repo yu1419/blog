@@ -1,33 +1,41 @@
 from . import member
-from flask import render_template, redirect, url_for, abort, jsonify
+from flask import render_template, redirect, url_for, abort, \
+                  flash, request
 from .. import login_required
 from flask_login import current_user
 from .forms import UserForm, PostForm
+from .helper import id_to_username
 
 
-@login_required
 @member.route("/follow/<int:user_id>", methods=['GET', 'POST'])
 def follow(user_id):
-    result = current_user.follow(user_id)
-    return jsonify(result)
+    if current_user.is_authenticated:
+        current_user.follow(user_id)
+        followed = str(id_to_username(user_id))
+        flash("You followed {}".format(followed))
+        return redirect(request.referrer)
+    else:
+        flash("please log in to follow users")
+        return redirect(request.referrer)
 
 
-@login_required
 @member.route("/un_follow/<int:user_id>", methods=['GET', 'POST'])
 def un_follow(user_id):
-    result = current_user.un_follow(user_id)
-    return jsonify(result)
+    current_user.un_follow(user_id)
+    unfollowed = str(id_to_username(user_id))
+    flash("You unfollowed {}".format(unfollowed))
+    return redirect(request.referrer)
 
 
-@login_required
 @member.route("/new_post", methods=['GET', 'POST'])
+@login_required
 def new_post():
     form = PostForm()
     if form.validate_on_submit():
         title = form.title.data
         row_id = current_user.add_post(title, form.pagedown.data)
         return redirect(url_for("main.post_byID", post_id=row_id))
-    return render_template("search.html", form=form)
+    return render_template("single_form.html", form=form, title="New Post")
 
 
 @login_required
@@ -44,7 +52,7 @@ def edit_post(post_id):
                                  title, form.pagedown.data)
         return redirect(url_for("main.post_byID",
                         post_id=current_post["post_id"]))
-    return render_template("search.html", form=form)
+    return render_template("single_form.html", form=form, title="Edit Post")
 
 
 @login_required
@@ -55,5 +63,9 @@ def profile():
     # email = info["email"]
     form = UserForm(user_name=user_name)
     if form.validate_on_submit():
-        current_user.update_username(form.user_name.data)
-    return render_template("search.html", form=form)
+        result = current_user.update_username(form.user_name.data)
+        if result:
+            flash("Username changed", "good")
+        else:
+            flash("Username already exists", "bad")
+    return render_template("single_form.html", form=form, title="Profile")

@@ -1,15 +1,16 @@
 from . import main
 from ..models import Single_post_model, UserBase
-from flask import render_template, session, jsonify
+from flask import render_template, session, jsonify, redirect, url_for, flash
 from flask_login import current_user
-from .helper import convert_id, user_basic
+from .helper import convert_id, user_basic, id_to_username
+from .forms import CommentForm
 
 
 @main.route("/")
 def index():
     session["page"] = 1
     result = current_user.show_articles()
-    return render_template("index.html", result=result)
+    return render_template("index.html", result=result, title="All blogs")
 
 
 @main.route("/more_index")
@@ -35,7 +36,8 @@ def user_post(user_id):
     user = UserBase(email)
     session["user_articles"] = email
     result = user.own_articles()
-    return jsonify(result)
+    return render_template("index.html", result=result,
+                           title=result[0]["user_name"] + "\' Posts")
 
 
 @main.route("/user/more_user")
@@ -54,7 +56,7 @@ def more_user():
 def home():
     session["home_page"] = 1
     articles = current_user.show_followed_articles()
-    return jsonify(articles)
+    return render_template("index.html", result=articles, title="Home")
 
 
 @main.route("/more_home")
@@ -67,9 +69,17 @@ def more_home():
     return jsonify(articles)
 
 
-@main.route("/post_id/<int:post_id>")
+@main.route("/post_id/<int:post_id>", methods=['GET', 'POST'])
 def post_byID(post_id):
     post = Single_post_model(post_id)
     info = post.get_info()
-    info["comment"] = post.get_comments()
-    return jsonify(info)
+    info["comments"] = post.get_comments()
+    form = CommentForm()
+    if form.validate_on_submit():
+        if current_user.is_authenticated:
+            current_user.add_comment(reply_to_id=None, post_id=post_id,
+                                     comment_content=form.pagedown.data)
+            return redirect(url_for(".post_byID", post_id=post_id))
+        else:
+            flash("Please sign in to commment")
+    return render_template("single_post.html", form=form, post=info)

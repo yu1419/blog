@@ -7,8 +7,9 @@
 {{ pagedown.include_pagedown() }}
 <meta name="google-site-verification" content="XkUVI76rPeXT9ms8fMTOFWkCfGm3y9PXzlCUm4Jzkzs" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
-<link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    {% block stylesheet %}
+        <link href="{{ url_for('static', filename='css/pre.css') }}" rel="stylesheet">
+    {% endblock %}
 {% endblock %}
 
 {% block navbar %}
@@ -25,6 +26,7 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
+                <li> <a href="{{url_for('main.user_post', user_id=1)}}">Admin's Posts</a></li>
                 {% if current_user.is_authenticated %}
                      <li> <a href="{{url_for('main.home')}}">Home</a></li>
                      <li> <a href="{{url_for('main.user_post', user_id=current_user.user_id)}}">My Post</a></li>
@@ -42,101 +44,31 @@
 {% endblock %}
 
 {% block content %}
-<style media="screen" type="text/css">
-    #start{
-        width: 50px;
-    }
-    #stop{
-    width: 50px;
-    }
-    #pic_link{
-    background-color: #efefef;
-    }
-    #SubmitButton{
-        background-color: lightpink;
-    }
-    .form-inline option {
-        margin-left: 10px;
-    }
-    .form-inline label {
-        margin-left: 10px;
-    }
- 
-    .form-inline select {
-        width: 10px;
-    }
-    #major{
-    width:80px;   
-    }
+<style media="screen" type="text/css"> </style>
 
-    #major option{
-     width:80px;   
-       }
-    #result{
-    width:80px;   
-    }
-
-    #result option{
-     width:80px;   
-       }
-    #degree{
-    width:80px;   
-    }
-
-    #degree option{
-     width:80px;   
-       }
-    #under{
-    width:80px;   
-    }
-
-    #under option{
-     width:80px;   
-       }
-    #sort{
-    width:80px;   
-    }
-
-    #sort option{
-     width:80px;   
-       }
-    #count{
-    width:80px;   
-    }
-
-    #count option{
-     width:80px;   
-       }
-    .footer {
-        right: 0;
-        bottom: 0;
-        left: 0;
-        padding: 1rem;
-        background-color: #efefef;
-        text-align: center;
-            }
-
-    </style>
 <div class="container">
-    {% for message in get_flashed_messages() %}
-    <div class="alert alert-warning">
-        <button type="button" class="close" data-dismiss="alert">&times;</button>
-        {{ message }}
-    </div>
-    {% endfor %}
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+             <ul class=flashes>
+             {% for category, message in messages %}
+                 <li class="{{ category }}">{{ message }}</li>
+            {% endfor %}
+             </ul>
+        {% endif %}
+    {% endwith %}
 
     {% block page_content %}
-    
-{% endblock %}
+
+    {% endblock %}
 <br>
 </br>
 </div>
-{% block footer %}
-<div class = "footer">
-  <p>This website is built with Python Flask framework and hosted on AWS. Contact information: <a href="mailto:graduateoffer.get@gmail.com">
-  graduateoffer.get@gmail.com</a>.</p>
-</div>
-{% endblock %}
+    {% block footer %}
+    <div class = "footer">
+      <p>This website is built with Python Flask framework and hosted on AWS. Contact information: <a href="mailto:graduateoffer.get@gmail.com">
+      graduateoffer.get@gmail.com</a>.</p>
+    </div>
+    {% endblock %}
 
 {% endblock %}
 

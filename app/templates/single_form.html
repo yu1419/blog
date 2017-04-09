@@ -1,14 +1,15 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "page.html" as paging %}
-{% block title %}Reset{% endblock %}
+{% block title %}{{title}}{% endblock %}
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Reset Password </h1>
+    <h1>{{title}} </h1>
 </div>
-<div style="width: 50%">
+<div class="single_form">
 
 {{ wtf.quick_form(form) }}
+
 </div>
 {% endblock %}
