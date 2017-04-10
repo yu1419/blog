@@ -1,7 +1,46 @@
 /*CSS For common appearance*/
-.contents{
- background-color: hsla(45, 14%, 40%, 0.1);
- min-height:70vh;
+.hover_div{
+
+}
+.reply_to_line{
+  margin-left: 4.0em;
+  color: red;
+  border: solid;
+}
+.reply_to_line:hover{
+  cursor: pointer;
+}
+
+.reply_to_username {
+  color: hsla(239, 90%, 61%,1);
+}
+.single_comment:hover{
+  background-color: hsla(206, 90%, 61%,0.2);
+}
+.single_comment:hover .post_reply{
+  text-align: right;
+  display: block;
+  font-weight: bold;
+  margin-right: 3.0em;
+}
+.single_comment:hover .post_reply:hover{
+  color: hsla(32, 9%, 6%,0.2);
+  cursor: pointer;
+}
+
+.post_reply{
+  display: None;
+}
+.pre_content:hover{
+  height: 8.0em;
+}
+h1{
+  color: Black;
+}
+body {
+ min-height:100vh;
+ background-color: hsla(210, 50%, 35%, 0.1);
+
 }
 .page_div{
   background-color: hsla(45, 14%, 40%, 0.1);
@@ -10,6 +49,7 @@
 .comment{
 	margin-left: 5%;
 	margin-top: 5.0em;
+  margin-bottom: 5.0em;
 }
 .post_content{
   border-radius: 1.5em;
@@ -19,9 +59,11 @@
   background-color: hsla(0,0%,0%, 0.1);
 }
 .single_comment{
+  width: 60%;
   border-radius: 3.0em;
   background-color: hsla(0,0%,75%,0.3);
-  padding-left: 1.5em;
+  padding-left: 1.7em;
+  padding-left: 1.7em;
 	margin-top: 1.0em;
 }
 .footer{
@@ -49,7 +91,7 @@
   padding-left: 2.0em;
   padding-right: 2.0em;
 	align-content: center;
-	background-color: hsla(0, 100%, 30%, 0.05);
+	background-color: hsla(40, 100q%, 50%, 0.1);
   width: 90%;
   margin-bottom: 1.0em;
 }

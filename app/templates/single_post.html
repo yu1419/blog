@@ -1,7 +1,33 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "page.html" as paging %}
+
 {% block title %}{{post["title"]}}{% endblock %}
+
+{% block head %}
+{{super()}}
+<script>
+$(document).ready(function(){
+
+	 $(document).on('click', '.post_reply', function(){
+	 $("#reply_to_section").remove();
+      $( "#csrf_token").before("<div id=\"reply_to_section\" reply_to_id=" + $(this).attr('user_id')+ "> Reply to <b class=\"reply_to_username\">" + $(this).attr('user_name') + "</b> <font class=\"reply_to_line\"> remove</font>");
+  });
+
+});
+
+
+$(document).ready(function(){
+	 $(document).on('click', '.reply_to_line', function(){
+     $("#reply_to_section").remove();
+  });
+
+});
+
+</script>
+
+{% endblock %}
+
 
 {% block page_content %}
 <div class="contents">
@@ -25,6 +51,8 @@
 		{% endif %}
 		{{Markup(markdown.markdown(comment["comment_content"]))}}
 		</div>
+				<div class="post_reply" user_name="{{comment["user_name"]}}" user_id="{{comment["user_id"]}}">reply</div>
+
 		</div>
 	{% endfor %}
 	</div>

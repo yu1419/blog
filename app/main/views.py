@@ -18,9 +18,10 @@ def more_index():
     page = session.get("page", 0)
     session["page"] = page + 1
     current_page = session["page"]
-    articles = {}
-    articles["post"] = current_user.show_articles(current_page)
-    return jsonify(articles)
+    #  articles = {}
+    result = current_user.show_articles(current_page)
+    return render_template("more.html", result=result)
+    #  return jsonify(articles)
 
 
 @main.route("/user_basic/<int:user_id>")

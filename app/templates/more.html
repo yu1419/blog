@@ -1,40 +1,3 @@
-{% extends "base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-
-{% block title %}{{title}}{% endblock %}
-
-
-{% block head %}
-{{super()}}
-<script>
-$(document).ready(function(){
-
-  $(window).scroll(function() {
-    if($(window).scrollTop() == $(document).height() - $(window).height()) {
-           
-
-     $.get("/more_index", function( my_var ) {
-     $( ".pre_blog").last().after(my_var);
-    }, 'html'); 
-
-
-    }
-});
-
-
-
-});
-</script>
-
-{% endblock %}
-
-
-{% block page_content %}
-{{super()}}
-<div class="page_div">
-  <div class="page-header">
-      <h1> <font>{{title}} </font></h1>
-  </div>
   {% for blog in result %}
     <div class="pre_blog hover_div">
       <div class="pre_title"> <a href="{{url_for("main.post_byID",post_id=blog["post_id"])}}">{{blog["title"]}}</a> 
@@ -58,5 +21,4 @@ $(document).ready(function(){
        </div>
     </div>
 {% endfor %}
-</div>
-{% endblock %}
+
