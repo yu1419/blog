@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, abort, \
 from .. import login_required
 from flask_login import current_user
 from .forms import UserForm, PostForm
-from .helper import id_to_username
+from ..helper import id_to_username
 
 
 @member.route("/follow/<int:user_id>", methods=['GET', 'POST'])
@@ -68,4 +68,5 @@ def profile():
             flash("Username changed", "good")
         else:
             flash("Username already exists", "bad")
+            return redirect(url_for(".profile"))
     return render_template("single_form.html", form=form, title="Profile")

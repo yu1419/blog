@@ -6,9 +6,9 @@ from flask_pagedown.fields import PageDownField
 
 
 class UserForm(FlaskForm):
-    user_name = StringField(u"user name",
+    user_name = StringField(u"User name",
                             validators=[Length(1, 64)], id="user_name")
-    submit = SubmitField(u"Change", id="Submit")
+    submit = SubmitField(u"Change username", id="Submit")
 
 
 class PostForm(FlaskForm):

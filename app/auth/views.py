@@ -1,10 +1,10 @@
 from . import auth
-from .forms import LoginForm, Register
+from .forms import LoginForm, Register, Rest_password, Change_password
 from flask_login import login_user, logout_user, current_user
 from ..models import User
-from .helper import get_user, valid_login, email_exist, register_user
-from .. import login_manager, login_required
-from flask import redirect, flash, render_template, url_for
+from ..helper import get_user, valid_login, email_exist, register_user
+from .. import login_manager, login_required, Message, mail
+from flask import redirect, flash, render_template, url_for, current_app
 
 
 @login_manager.user_loader
@@ -33,6 +33,42 @@ def logout():
     logout_user()
     flash("logout", "good")
     return redirect(url_for("main.index"))
+
+
+@auth.route("/forgot_password", methods=['GET', 'POST'])
+def forgot_password():
+    form = Rest_password()
+    if form.validate_on_submit():
+        email = form.email.data
+        has_email = email_exist(email)
+        if has_email:
+            new_password = current_user.reset_email(email)
+            msg = Message("Your new password of blog website",
+                          sender=current_app.config['MAIL_USERNAME'],
+                          recipients=[email])
+            msg.html = render_template("new_password.html", new_password=new_password)
+            with current_app.app_context():
+                mail.send(msg)
+            flash("A temporary password has been sent to your email")
+            return redirect(url_for(".login"))
+        else:
+            flash("email doesn't exist")
+    return render_template("single_form.html", form=form, title="Reset password")
+
+
+@auth.route("/change_password", methods=['GET', 'POST'])
+def change_password():
+    form = Change_password()
+    if form.validate_on_submit():
+        old_password = form.old_password.data
+        new_password = form.password.data
+        result = current_user.change_password(old_password, new_password)
+        if result:
+            flash("You have changed your password", "good")
+            return redirect(url_for("member.profile"))
+        else:
+            flash("old email is not correct", "bad")
+    return render_template("single_form.html", form=form, title="Change password")
 
 
 @auth.route("/login", methods=['GET', 'POST'])

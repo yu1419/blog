@@ -9,6 +9,11 @@ from flask_pagedown import PageDown
 from flaskext.markdown import Markdown
 import markdown
 from flask import Markup
+from .database import db
+from .helper import *
+from .models import AnonymousUser
+from flask_mail import Mail, Message
+
 
 login_manager = LoginManager()
 SSL_DISABLE = False
@@ -23,9 +28,8 @@ FLASKY_COMMENTS_PER_PAGE = 30
 FLASKY_SLOW_DB_QUERY_TIME=0.5
 
 
-db = get_db()
 pagedown = PageDown()
-
+mail = Mail()
 
 def id_to_username(user_id):
     sql = "select user_name from user where user_id = %s"
@@ -33,19 +37,29 @@ def id_to_username(user_id):
         cursor.execute(sql, (user_id, ))
         return cursor.fetchone()
 
+
 def create_app():
     app = Flask(__name__)
-    pagedown.init_app(app)
-    bootstrap = Bootstrap(app)
-    login_manager.init_app(app)
+
+
     expiration = 3600
     Markdown(app)
+    login_manager.anonymous_user = AnonymousUser
 
+    app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
+    app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
     app.config['SECRET_KEY'] = 'hard to guess string'
     app.jinja_env.globals['id_to_username'] = id_to_username
     app.jinja_env.globals['markdown'] = markdown
     app.jinja_env.globals['Markup'] = Markup
 
+    mail.init_app(app)
+    pagedown.init_app(app)
+    bootstrap = Bootstrap(app)
+    login_manager.init_app(app)
 
     from .main import main as main_blueprint
     app.register_blueprint(main_blueprint)

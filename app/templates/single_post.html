@@ -11,7 +11,7 @@ $(document).ready(function(){
 
 	 $(document).on('click', '.post_reply', function(){
 	 $("#reply_to_section").remove();
-      $( "#csrf_token").before("<div id=\"reply_to_section\" reply_to_id=" + $(this).attr('user_id')+ "> Reply to <b class=\"reply_to_username\">" + $(this).attr('user_name') + "</b> <font class=\"reply_to_line\"> remove</font>");
+      $( "#csrf_token").before("<div id=\"reply_to_section\" reply_to_id=" + $(this).attr('user_id')+ "> Reply to <b class=\"reply_to_username\">" + "<input type= \"text\" class=\"reply_to_name\" name=\"reply_to_name\" value=" + $(this).attr('user_name')+ ">" + "</b> <font class=\"reply_to_line\"> remove</font>");
   });
 
 });

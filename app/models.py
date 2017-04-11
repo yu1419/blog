@@ -1,8 +1,8 @@
 # coding: utf-8
 from . import db
 from flask_login import UserMixin, AnonymousUserMixin
-from . import login_manager
-
+from .generate_password import general_random_password, valid_login
+from werkzeug.security import generate_password_hash
 count_per_page = 5
 
 
@@ -22,6 +22,14 @@ class AnonymousUser(AnonymousUserMixin):
 
     def is_following(self, user_id):
         return False
+
+    def reset_email(self, email):
+        password, hashed_password = general_random_password()
+        sql = "update user set hashed_password = %s where email = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (hashed_password, email))
+            db.commit()
+            return password
 
 
 class UserBase(object):
@@ -65,6 +73,7 @@ class UserBase(object):
             cursor.execute(sql, (self.user_id, reply_to_id,
                                  post_id, comment_content))
             db.commit()
+
     def name_available(self, new_name):
         sql = "select count(*) from user where user_name = %s"
         with db.cursor() as cursor:
@@ -176,6 +185,19 @@ class UserBase(object):
                 articles = result
         return articles
 
+    def change_password(self, old, new):
+        valid = valid_login(self.id, old)  # id is email
+        if valid:
+            new = generate_password_hash(new)
+            sql = "update user set hashed_password = %s where user_id = %s"
+            with db.cursor() as cursor:
+                cursor.execute(sql, (new, self.user_id))
+                db.commit()
+                return True
+
+        else:
+            return False
+
 
 class User(UserBase, UserMixin):
     pass
@@ -238,5 +260,3 @@ class Single_post_model(object):
             cursor.execute(sql, (self.post_id, ))
             result = cursor.fetchone()
         return result
-
-login_manager.anonymous_user = AnonymousUser

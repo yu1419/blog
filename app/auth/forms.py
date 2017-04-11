@@ -19,3 +19,17 @@ class Register(FlaskForm):
     password = PasswordField(u'Password',
                              validators=[Length(6, 64)], id="password")
     submit = SubmitField(u"Register", id="Submit")
+
+
+class Change_password(FlaskForm):
+    old_password = PasswordField(u'Old password',
+                                 validators=[Length(6, 64)], id="password")
+    password = PasswordField(u'New Password',
+                             validators=[Length(6, 64)], id="password")
+    submit = SubmitField(u"Change Password", id="Submit")
+
+
+class Rest_password(FlaskForm):
+    email = StringField(u'Email', validators=[Length(1, 64),
+                                              Email()], id="email")
+    submit = SubmitField(u"Send password to email", id="Submit")

@@ -1,8 +1,9 @@
 from . import main
 from ..models import Single_post_model, UserBase
-from flask import render_template, session, jsonify, redirect, url_for, flash
+from flask import render_template, session, jsonify, redirect, url_for,\
+                  flash, request
 from flask_login import current_user
-from .helper import convert_id, user_basic, id_to_username
+from ..helper import convert_id, user_basic, id_to_username, name_to_id
 from .forms import CommentForm
 
 
@@ -78,7 +79,9 @@ def post_byID(post_id):
     form = CommentForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
-            current_user.add_comment(reply_to_id=None, post_id=post_id,
+            reply_to_name = (request.form.get("reply_to_name", None))
+            reply_to_id = name_to_id(reply_to_name)
+            current_user.add_comment(reply_to_id=reply_to_id, post_id=post_id,
                                      comment_content=form.pagedown.data)
             return redirect(url_for(".post_byID", post_id=post_id))
         else:

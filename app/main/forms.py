@@ -6,5 +6,5 @@ from flask_pagedown.fields import PageDownField
 
 
 class CommentForm(FlaskForm):
-    pagedown = PageDownField('Enter your comment')
+    pagedown = PageDownField('')
     submit = SubmitField(u"Submit", id="Submit")

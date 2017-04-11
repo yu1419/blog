@@ -10,6 +10,14 @@ create table blog.user (
 )
 ;
 
+Drop table if exists blog.category;
+create table blog.category(
+  category_name varchar(50) not NULL,
+  post_id bigint,
+  id int AUTO_INCREMENT,
+  primary key(id)
+);
+
 DROP TABLE IF EXISTS blog.post;
 create table blog.post (
   user_id bigint not NULL,
