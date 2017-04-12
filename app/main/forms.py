@@ -7,7 +7,7 @@ from flask_pagedown.fields import PageDownField
 
 class CommentForm(FlaskForm):
     pagedown = PageDownField('')
-    submit = SubmitField(u"Submit", id="Submit")
+    submit = SubmitField(u"Submit Markdown", id="Submit")
 
 
 class UserForm(FlaskForm):

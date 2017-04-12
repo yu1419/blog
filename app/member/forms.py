@@ -15,9 +15,9 @@ class PostForm(FlaskForm):
     title = StringField(u"Title",
                         validators=[Length(1, 100)], id="title")
     pagedown = PageDownField('Enter your markdown')
-    submit = SubmitField(u"Submit", id="Submit")
+    submit = SubmitField(u"Submit Markdown", id="Submit")
 
 
 class CommentForm(FlaskForm):
     pagedown = PageDownField('Enter your markdown')
-    submit = SubmitField(u"Submit", id="Submit")
+    submit = SubmitField(u"Submit Markdown", id="Submit")

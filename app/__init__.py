@@ -16,20 +16,10 @@ from flask_mail import Mail, Message
 from .fake_data import fake_data
 
 login_manager = LoginManager()
-SSL_DISABLE = False
-MAIL_SERVER = 'smtp.googlemail.com'
-MAIL_PORT = 587
-MAIL_USE_TLS = True
-MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
-MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
-FLASKY_POSTS_PER_PAGE = 20
-FLASKY_FOLLOWERS_PER_PAGE = 50
-FLASKY_COMMENTS_PER_PAGE = 30
-FLASKY_SLOW_DB_QUERY_TIME=0.5
-
-
 pagedown = PageDown()
 mail = Mail()
+bootstrap = Bootstrap()
+
 
 def id_to_username(user_id):
     sql = "select user_name from user where user_id = %s"
@@ -40,12 +30,8 @@ def id_to_username(user_id):
 
 def create_app(add_fake=False):
     app = Flask(__name__)
-
-
-    expiration = 3600
     Markdown(app)
     login_manager.anonymous_user = AnonymousUser
-
     app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
@@ -56,9 +42,9 @@ def create_app(add_fake=False):
     app.jinja_env.globals['markdown'] = markdown
     app.jinja_env.globals['Markup'] = Markup
 
+    bootstrap.init_app(app)
     mail.init_app(app)
     pagedown.init_app(app)
-    bootstrap = Bootstrap(app)
     login_manager.init_app(app)
 
     from .main import main as main_blueprint
