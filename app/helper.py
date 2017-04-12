@@ -1,8 +1,20 @@
-import string
-import random
 from .database import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from .models import User
+from threading import Thread
+from flask import current_app
+
+
+def send_async_email(app, mail, msg):
+    with app.app_context():
+        mail.send(msg)
+
+
+def send_email(mail, msg):
+    app = current_app._get_current_object()
+    thr = Thread(target=send_async_email, args=[app, mail, msg])
+    thr.start()
+    return thr
 
 
 def register_user(email, password):

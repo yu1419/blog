@@ -4,7 +4,7 @@ from flask import render_template, session, jsonify, redirect, url_for,\
                   flash, request
 from flask_login import current_user
 from ..helper import convert_id, user_basic, id_to_username, name_to_id
-from .forms import CommentForm
+from .forms import CommentForm, UserForm
 
 
 @main.route("/")
@@ -33,25 +33,27 @@ def user_basic_into(user_id):
 
 @main.route("/user/<int:user_id>")
 def user_post(user_id):
+    name = id_to_username(user_id)
     email = convert_id(user_id)
     session["user_page"] = 1
+
     user = UserBase(email)
     session["user_articles"] = email
     result = user.own_articles()
-    return render_template("index.html", result=result,
-                           title=result[0]["user_name"] + "\' Posts")
+    return render_template("index.html", result=result, user_id=user_id,
+                           title=name + "\' Posts")
 
 
-@main.route("/user/more_user")
+@main.route("/more_user")
 def more_user():
     page = session.get("user_page", 0)
     session["user_page"] = page + 1
     current_page = session["user_page"]
     email = session["user_articles"]
+
     user = UserBase(email)
-    articles = {}
-    articles["post"] = user.own_articles(current_page)
-    return jsonify(articles)
+    result = user.own_articles(current_page)
+    return render_template("more.html", result=result)
 
 
 @main.route("/home")
@@ -66,9 +68,8 @@ def more_home():
     page = session.get("home_page", 0)
     session["home_page"] = page + 1
     current_page = session["home_page"]
-    articles = {}
-    articles["post"] = current_user.show_followed_articles(current_page)
-    return jsonify(articles)
+    result = current_user.show_followed_articles(current_page)
+    return render_template("more.html", result=result)
 
 
 @main.route("/post_id/<int:post_id>", methods=['GET', 'POST'])
@@ -87,3 +88,26 @@ def post_byID(post_id):
         else:
             flash("Please sign in to commment")
     return render_template("single_post.html", form=form, post=info)
+
+
+@main.route("/profile/<int:user_id>", methods=['GET', 'POST'])
+def profile(user_id):
+    if current_user.is_authenticated and \
+          current_user.info()["user_id"] == user_id:
+        user_name = current_user.info()["user_name"]
+        form = UserForm(user_name=user_name)
+        if form.validate_on_submit():
+            result = current_user.update_username(form.user_name.data)
+            if result:
+                flash("Username changed", "good")
+            else:
+                flash("Username already exists", "bad")
+                return redirect(url_for(".profile"))
+        return render_template("single_form.html", form=form, title="Profile")
+    else:
+        user_email = convert_id(user_id)
+        author = UserBase(user_email)
+        info = author.info()
+        user_name = info.get("user_name")
+        return render_template("profile.html", user_name=user_name,
+                               title="Profile")

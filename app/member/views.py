@@ -53,20 +53,3 @@ def edit_post(post_id):
         return redirect(url_for("main.post_byID",
                         post_id=current_post["post_id"]))
     return render_template("single_form.html", form=form, title="Edit Post")
-
-
-@login_required
-@member.route("/profile", methods=['GET', 'POST'])
-def profile():
-    info = current_user.info()
-    user_name = info["user_name"]
-    # email = info["email"]
-    form = UserForm(user_name=user_name)
-    if form.validate_on_submit():
-        result = current_user.update_username(form.user_name.data)
-        if result:
-            flash("Username changed", "good")
-        else:
-            flash("Username already exists", "bad")
-            return redirect(url_for(".profile"))
-    return render_template("single_form.html", form=form, title="Profile")

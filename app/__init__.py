@@ -13,7 +13,7 @@ from .database import db
 from .helper import *
 from .models import AnonymousUser
 from flask_mail import Mail, Message
-
+from .fake_data import fake_data
 
 login_manager = LoginManager()
 SSL_DISABLE = False
@@ -38,7 +38,7 @@ def id_to_username(user_id):
         return cursor.fetchone()
 
 
-def create_app():
+def create_app(add_fake=False):
     app = Flask(__name__)
 
 
@@ -67,6 +67,8 @@ def create_app():
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
     from .member import member as member_blueprint
     app.register_blueprint(member_blueprint, url_prefix='/member')
+    if add_fake:
+        fake_data()
     return app
 
 if __name__ == "__main__":

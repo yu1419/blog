@@ -4,7 +4,7 @@ from . import db
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
-def general_random_password(n=50):
+def general_random_password(n=10):
     char_list = string.ascii_uppercase + string.digits
     pass_list = [random.choice(char_list) for _ in range(n)]
     password = "".join(pass_list)

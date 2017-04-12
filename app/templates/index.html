@@ -11,12 +11,36 @@ $(document).ready(function(){
 
   $(window).scroll(function() {
     if($(window).scrollTop() == $(document).height() - $(window).height()) {
-           
 
-     $.get("/more_index", function( my_var ) {
-     $( ".pre_blog").last().after(my_var);
-    }, 'html'); 
+        if( $("#title").text() == "Home") {
 
+           $.get("/more_index", function( my_var ) {
+              $( ".pre_blog").last().after(my_var);
+               }, 'html');
+        }
+    
+
+        if( $("#title").text() == "All blogs") {
+
+           $.get("/more_index", function( my_var ) {
+              $( ".pre_blog").last().after(my_var);
+               }, 'html');
+        }
+
+
+
+        if( $("#title").text().endsWith("Posts")) {
+
+           $.get("/more_user", function( my_var ) {
+              $( ".pre_blog").last().after(my_var);
+               }, 'html');
+        }
+
+
+
+
+
+    
 
     }
 });
@@ -33,7 +57,10 @@ $(document).ready(function(){
 {{super()}}
 <div class="page_div">
   <div class="page-header">
-      <h1> <font>{{title}} </font></h1>
+      <h1> <font id="title">{{title}}</font></h1>
+      {% if title.endswith("Posts") %}
+       <font class = "user_profile_link"><a href="{{url_for('main.profile', user_id=user_id)}}">Profile</a></font>
+      {% endif %}
   </div>
   {% for blog in result %}
     <div class="pre_blog hover_div">

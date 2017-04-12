@@ -2,7 +2,8 @@ from . import auth
 from .forms import LoginForm, Register, Rest_password, Change_password
 from flask_login import login_user, logout_user, current_user
 from ..models import User
-from ..helper import get_user, valid_login, email_exist, register_user
+from ..helper import get_user, valid_login, email_exist, register_user, \
+                     send_email
 from .. import login_manager, login_required, Message, mail
 from flask import redirect, flash, render_template, url_for, current_app
 
@@ -46,14 +47,15 @@ def forgot_password():
             msg = Message("Your new password of blog website",
                           sender=current_app.config['MAIL_USERNAME'],
                           recipients=[email])
-            msg.html = render_template("new_password.html", new_password=new_password)
-            with current_app.app_context():
-                mail.send(msg)
+            msg.html = render_template("new_password.html",
+                                       new_password=new_password)
+            send_email(mail, msg)
             flash("A temporary password has been sent to your email")
             return redirect(url_for(".login"))
         else:
             flash("email doesn't exist")
-    return render_template("single_form.html", form=form, title="Reset password")
+    return render_template("single_form.html", form=form,
+                           title="Reset password")
 
 
 @auth.route("/change_password", methods=['GET', 'POST'])
@@ -65,10 +67,11 @@ def change_password():
         result = current_user.change_password(old_password, new_password)
         if result:
             flash("You have changed your password", "good")
-            return redirect(url_for("member.profile"))
+            return redirect(url_for("main.profile"))
         else:
             flash("old email is not correct", "bad")
-    return render_template("single_form.html", form=form, title="Change password")
+    return render_template("single_form.html", form=form,
+                           title="Change password")
 
 
 @auth.route("/login", methods=['GET', 'POST'])

@@ -27,11 +27,10 @@
         </div>
         <div class="navbar-collapse collapse">
             <ul class="nav navbar-nav">
-                <li> <a href="{{url_for('main.user_post', user_id=1)}}">Admin's Posts</a></li>
                 {% if current_user.is_authenticated %}
                      <li> <a href="{{url_for('main.home')}}">Home</a></li>
                      <li> <a href="{{url_for('main.user_post', user_id=current_user.user_id)}}">My Post</a></li>
-                     <li> <a href="{{url_for('member.profile')}}">Profile</a></li>
+                     <li> <a href="{{url_for('main.profile', user_id=current_user.user_id)}}">Profile</a></li>
                      <li> <a href="{{url_for('member.new_post')}}">New Post</a></li>
                      <li><a href="{{url_for('auth.logout')}}">Logout</a></li>
                  {% else %}
