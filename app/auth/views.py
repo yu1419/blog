@@ -51,10 +51,10 @@ def forgot_password():
             msg.html = render_template("new_password.html",
                                        new_password=new_password)
             send_email(mail, msg)
-            flash("A temporary password has been sent to your email")
+            flash("A temporary password has been sent to your email", "good")
             return redirect(url_for(".login"))
         else:
-            flash("email doesn't exist")
+            flash("email doesn't exist", "bad")
     return render_template("single_form.html", form=form,
                            title="Reset password")
 

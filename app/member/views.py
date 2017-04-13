@@ -18,10 +18,10 @@ def follow(user_id):
     if current_user.is_authenticated:
         current_user.follow(user_id)
         followed = str(id_to_username(user_id))
-        flash("You followed {}".format(followed))
+        flash("You followed {}".format(followed), "good")
         return redirect(request.referrer)
     else:
-        flash("please log in to follow users")
+        flash("please log in to follow users", "bad")
         return redirect(request.referrer)
 
 
@@ -29,7 +29,7 @@ def follow(user_id):
 def un_follow(user_id):
     current_user.un_follow(user_id)
     unfollowed = str(id_to_username(user_id))
-    flash("You unfollowed {}".format(unfollowed))
+    flash("You unfollowed {}".format(unfollowed), "good")
     return redirect(request.referrer)
 
 
