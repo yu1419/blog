@@ -39,6 +39,11 @@ $(document).ready(function(){
     <div class="post_content">
     {{Markup(markdown.markdown(post["content"]))}}   
     </div>
+{% if current_user.is_authenticated and current_user.user_id == post["user_id"] %}
+<a class="update_post" href="{{url_for("member.edit_post",post_id=post["post_id"])}}">Update post</a>
+{% endif %}
+
+
 	 <div class="comment">
 	 <h4> Comments:</h4>
 	{% for comment in post["comments"] %}

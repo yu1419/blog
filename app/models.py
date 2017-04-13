@@ -43,6 +43,14 @@ class UserBase(object):
             cursor.execute(sql, (self.id, ))
             self.user_id = cursor.fetchone()["user_id"]
 
+    def post_count(self):
+        sql = "select count(*) from post where user_id = %s"
+        result = 0
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id))
+            result = cursor.fetchone()["count(*)"]
+        return result
+
     def info(self):
         sql = "select * from user where user_id = %s"
         result = {}
@@ -83,16 +91,22 @@ class UserBase(object):
             else:
                 return True
 
-    def update_username(self, new_name):
+    def update_info(self, new_name, about_me):
         available = self.name_available(new_name)
         if available:
-            sql = "UPDATE user set user_name = %s where user_id = %s"
+            sql = "UPDATE user set user_name = %s, about_me = %s \
+                   where user_id = %s"
             with db.cursor() as cursor:
-                cursor.execute(sql, (new_name, self.user_id))
+                cursor.execute(sql, (new_name, about_me, self.user_id))
                 db.commit()
                 return True
         else:
-            return False
+            if not new_name == self.info()["user_name"]:
+                print(new_name)
+                print(self.info()["user_name"])
+                return False
+            else:
+                return True
 
     def add_post(self, title, content):
         sql = "insert into post (title, content, user_id) values(%s, %s, %s)"

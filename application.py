@@ -1,5 +1,5 @@
 from app import create_app
-
-app = create_app(add_fake=False)
-# fake user.password = user.email
-app.run()
+application = create_app(add_fake=False)
+if __name__ == '__main__':
+    # fake user.password = user.email
+    application.run(host='0.0.0.0')

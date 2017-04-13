@@ -106,6 +106,7 @@ DROP TABLE IF EXISTS `user`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
+ `about_me` TEXT COLLATE utf8_unicode_ci,
   `user_name` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
   `hashed_password` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
   `last_time` datetime DEFAULT CURRENT_TIMESTAMP,

@@ -92,22 +92,59 @@ def post_byID(post_id):
 
 @main.route("/profile/<int:user_id>", methods=['GET', 'POST'])
 def profile(user_id):
+    user_email = convert_id(user_id)
+    author = UserBase(user_email)
+    followed = author.followed_id()
+    followed_count = len(followed)
+    followed_user = []  # those are followed by current user_id
+    for users in followed:
+        followed_user.append((users, id_to_username(users),
+                             current_user.is_authenticated and
+                             current_user.is_following(users)))
+    follower = author.follower_id()
+    follower_count = len(follower)
+    follower_user = []  # those are following current user_id
+    for users in follower:
+        follower_user.append((users, id_to_username(users),
+                             current_user.is_authenticated and
+                             current_user.is_following(users)))
+    info = author.info()
+    user_name = info.get("user_name")
+    about_me = info.get("about_me")
+    is_following_author = False
+    post_count = author.post_count()
+
     if current_user.is_authenticated and \
-          current_user.info()["user_id"] == user_id:
-        user_name = current_user.info()["user_name"]
-        form = UserForm(user_name=user_name)
+             current_user.info()["user_id"] == user_id:
+        info = current_user.info()
+        user_name = info["user_name"]
+        about_me = info["about_me"]
+        email = info["email"]
+        form = UserForm(user_name=user_name,about_me=about_me)
         if form.validate_on_submit():
-            result = current_user.update_username(form.user_name.data)
+            result = current_user.update_info(form.user_name.data,
+                                              form.about_me.data)
             if result:
-                flash("Username changed", "good")
+                flash("Infomation updated", "good")
             else:
                 flash("Username already exists", "bad")
-                return redirect(url_for(".profile"))
-        return render_template("single_form.html", form=form, title="Profile")
-    else:
-        user_email = convert_id(user_id)
-        author = UserBase(user_email)
-        info = author.info()
-        user_name = info.get("user_name")
-        return render_template("profile.html", user_name=user_name,
-                               title="Profile")
+                return redirect(url_for(".profile", user_id=user_id))
+        return render_template("user_profile.html", title="Profile",
+                               followed_count=followed_count,
+                               follower_count=follower_count,
+                               follower_user=follower_user,
+                               followed_user=followed_user,
+                               user_id=user_id, form=form,
+                               post_count=post_count, email=email)
+    if current_user.is_authenticated and \
+            user_id in current_user.followed_id():
+            is_following_author = True
+
+    return render_template("profile.html", user_name=user_name,
+                           title="Profile",
+                           is_following_author=is_following_author,
+                           followed_count=followed_count,
+                           follower_count=follower_count,
+                           about_me=about_me, follower_user=follower_user,
+                           followed_user=followed_user, user_id=user_id,
+                           post_count=post_count)

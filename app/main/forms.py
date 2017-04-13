@@ -13,4 +13,6 @@ class CommentForm(FlaskForm):
 class UserForm(FlaskForm):
     user_name = StringField(u"User name",
                             validators=[Length(1, 64)], id="user_name")
-    submit = SubmitField(u"Change username", id="Submit")
+    about_me = StringField(u"About me",
+                           validators=[Length(1, 64)], id="user_name")
+    submit = SubmitField(u"Change profile", id="Submit")

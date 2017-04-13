@@ -1,4 +1,29 @@
 /*CSS For common appearance*/
+body {
+ min-height:100vh;
+ background-color: hsla(210, 50%, 35%, 0.1);
+}
+
+#followed_users{
+  display:none;
+}
+#follower_users{
+  display: none;
+}
+
+.followed_count{
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 1.5em;
+}
+
+.follower_count{
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 4.0em;
+  font-size: 1.5em;
+}
+
 .good{
   font-size: 1.5em;
   }
@@ -66,7 +91,6 @@ h1{
 body {
  min-height:100vh;
  background-color: hsla(210, 50%, 35%, 0.1);
-
 }
 .page_div{
   background-color: hsla(45, 14%, 40%, 0.1);

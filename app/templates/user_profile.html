@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
-{% import "page.html" as paging %}
 
 {% block head %}
 {{super()}}
@@ -8,16 +7,12 @@
 $(document).ready(function(){
 	$(".page-header").css("min-height","65vh");
 
-
 	$( ".followed_count" ).click(function() {
   			$( "#followed_users" ).toggle("slow")
-  		
 	});
-
 	$( ".follower_count" ).click(function() {
   			$( "#follower_users" ).toggle("slow");
 	});
-
 
 });
 </script>
@@ -36,16 +31,14 @@ $(document).ready(function(){
 
 
     <h1>{{title}} </h1> 
-    <p class="profile_username">User Name: {{user_name}}</p>
-    <p class="profile_about_me">About Me: {{about_me}}</p>
+    {{ wtf.quick_form(form) }}
+    <p>Email: {{email}}</p>
     <p class="profile_post_count">Post Count: 
     <a class="profile_follow_link" href="{{url_for("main.user_post",user_id=user_id)}}">{{post_count}}</a>
     </p>
-    {% if is_following_author %}
-		<a class="profile_unfollow_link" href="{{url_for("member.un_follow",user_id=user_id)}}">Unfollow</a>
-	{% else %}
-		<a class="profile_follow_link" href="{{url_for("member.follow",user_id=user_id)}}">Follow</a>
-	{% endif %}
+    <div>
+    	<a href="{{url_for('auth.change_password')}}" class="change_password_link">Change password.</a>  
+    </div>
     <div> <font class="followed_count">Following: {{followed_count}}</font>
     <font class="follower_count">Followed by: {{follower_count}}</font>
     </div>
@@ -53,12 +46,12 @@ $(document).ready(function(){
     <div id="followed_users">
 	    <h4> Following: </h4>
 	    <ol type="1">
-	    {% for users_id, users_name, is_following in followed_user %}
-				 <li>{{users_name}}
+	    {% for user_id, user_name, is_following in followed_user %}
+				 <li>{{user_name}}
 				 {% if is_following and not current_user.user_id == user_id %}
-				        <a class="profile_unfollow_link" href="{{url_for("member.un_follow",user_id=users_id)}}">Unfollow</a>
+				        <a class="profile_unfollow_link" href="{{url_for("member.un_follow",user_id=user_id)}}">Unfollow</a>
 				 {% elif not is_following %}
-				          <a class="profile_follow_link" href="{{url_for("member.follow",user_id=users_id)}}">Follow</a>
+				          <a class="profile_follow_link" href="{{url_for("member.follow",user_id=user_id)}}">Follow</a>
 				  {% endif %}
 				 </li>
 	    {% endfor %}
@@ -71,12 +64,12 @@ $(document).ready(function(){
     <div id="follower_users">
     <h4> Followed by:</h4>
 	    <ol type="1">
-	    {% for users_id, users_name, is_following in follower_user %}
-				 <li>{{users_name}}
-				 {% if is_following and not current_user.user_id == users_id %}
-				        <a class="profile_unfollow_link" href="{{url_for("member.un_follow",user_id=users_id)}}">Unfollow</a>
+	    {% for user_id, user_name, is_following in follower_user %}
+				 <li>{{user_name}}
+				 {% if is_following and not current_user.user_id == user_id %}
+				        <a class="profile_unfollow_link" href="{{url_for("member.un_follow",user_id=user_id)}}">Unfollow</a>
 				 {% elif not is_following %}
-				          <a class="profile_follow_link" href="{{url_for("member.follow",user_id=users_id)}}">Follow</a>
+				          <a class="profile_follow_link" href="{{url_for("member.follow",user_id=user_id)}}">Follow</a>
 				  {% endif %}
 				 </li>
 	    {% endfor %}

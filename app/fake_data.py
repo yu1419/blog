@@ -18,13 +18,16 @@ FOLLOW_COUNT = 100
 def fake_user(USER_count=100):
     for i in range(USER_count):
         user_name = forgery_py.name.full_name()
+        about_me = forgery_py.forgery.lorem_ipsum.\
+            paragraphs(quantity=1, sentences_quantity=3)
         email = forgery_py.internet.email_address()
         hashed_password = generate_password_hash(email)
-        sql = "insert into user (user_name, email, hashed_password) \
-               values (%s, %s, %s)"
+        sql = "insert into user (user_name, email, hashed_password, about_me) \
+               values (%s, %s, %s, %s)"
         try:
             with db.cursor() as cursor:
-                cursor.execute(sql, (user_name, email, hashed_password))
+                cursor.execute(sql, (user_name, email,
+                               hashed_password, about_me))
                 db.commit()
         except Exception as e:
             print(e)
@@ -59,7 +62,7 @@ def fake_follow(FOLLOW_COUNT = 100):
         cursor.execute(sql)
         all_user_id = cursor.fetchall()
     for user in all_user_id:
-        for i in range(FOLLOW_COUNT):
+        for i in range(random.randrange(FOLLOW_COUNT)):
             user_id_index = random.randrange(len(all_user_id))
             follower = all_user_id[user_id_index]["user_id"]
             user_id = user["user_id"]

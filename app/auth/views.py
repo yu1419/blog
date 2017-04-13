@@ -67,7 +67,8 @@ def change_password():
         result = current_user.change_password(old_password, new_password)
         if result:
             flash("You have changed your password", "good")
-            return redirect(url_for("main.profile"))
+            return redirect(url_for("main.profile",
+                            user_id=current_user.user_id))
         else:
             flash("old email is not correct", "bad")
     return render_template("single_form.html", form=form,
