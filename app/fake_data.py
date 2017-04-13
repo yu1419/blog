@@ -7,17 +7,16 @@ import random
 #  add to lorem_ipsum.py    :
 # import sys
 # if sys.version_info.major >= 3:xrange = range
+""" this script is used to generate fake datas for the blog website """
 
-
-
-
-USER_count = 100
-POST_COUNT = 1000
-COMMENT_COUNT = 10
-FOLLOW_COUNT = 100
+# USER_count = 100
+# POST_COUNT = 1000
+# COMMENT_COUNT = 10
+# FOLLOW_COUNT = 100
 
 
 def fake_user(USER_count=100):
+    # generate fake user and the password is equal to user email
     for i in range(USER_count):
         user_name = forgery_py.name.full_name()
         about_me = forgery_py.forgery.lorem_ipsum.\
@@ -35,7 +34,9 @@ def fake_user(USER_count=100):
             print(e)
 
 
-def fake_post(POST_COUNT=1000):
+def fake_post(POST_COUNT=100):
+    # generate fake post for each user , each user has a post count of (0,100)
+
     all_user_id = []
     sql = "select user_id from user"
     with db.cursor() as cursor:
@@ -57,7 +58,8 @@ def fake_post(POST_COUNT=1000):
             print(e)
 
 
-def fake_follow(FOLLOW_COUNT = 100):
+def fake_follow(FOLLOW_COUNT=100):
+    # generate fake followers
     all_user_id = []
     sql = "select user_id from user"
     with db.cursor() as cursor:

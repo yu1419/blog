@@ -1,9 +1,8 @@
 from . import member
 from flask import render_template, redirect, url_for, abort, \
                   flash, request
-from .. import login_required
-from flask_login import current_user
-from .forms import UserForm, PostForm
+from flask_login import current_user, login_required
+from .forms import PostForm
 from ..helper import id_to_username
 
 

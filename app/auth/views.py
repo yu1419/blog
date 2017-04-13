@@ -1,10 +1,11 @@
 from . import auth
 from .forms import LoginForm, Register, Rest_password, Change_password
-from flask_login import login_user, logout_user, current_user
+from flask_login import login_user, logout_user, current_user, login_required
 from ..models import User
 from ..helper import get_user, valid_login, email_exist, register_user, \
                      send_email
-from .. import login_manager, login_required, Message, mail
+from .. import login_manager, mail
+from flask_mail import Message
 from flask import redirect, flash, render_template, url_for, current_app
 
 

@@ -27,6 +27,7 @@ def register_user(email, password):
 
 
 def email_exist(email):
+    # check if an email has been regisreted or not
     sql = "select count(*) from user where email = %s"
     count = 0
     with db.cursor() as cursor:
@@ -55,6 +56,7 @@ def valid_login(email, password):
 
 
 def get_user(email):
+    # get user by email
     user = None
     sql = "select count(*) from user where email = %s"
     count = 0
@@ -69,6 +71,7 @@ def get_user(email):
 
 
 def convert_id(id):
+    # covert user_id to user email
     sql = "select email from user where user_id = %s"
     email = ""
     with db.cursor() as cursor:
@@ -80,6 +83,7 @@ def convert_id(id):
 
 
 def id_to_username(user_id):
+    # convert user_id to user name
     sql = "select user_name from user where user_id = %s"
     user_name = None
     with db.cursor() as cursor:
@@ -91,6 +95,7 @@ def id_to_username(user_id):
 
 
 def name_to_id(user_name):
+    # convert user name to user id
     if not user_name:
         return None
     sql = "select user_id from user where user_name = %s"
@@ -105,6 +110,7 @@ def name_to_id(user_name):
 
 
 def user_basic(user_id):
+    # get basic user info by user id
     sql = "select * from user where user_id = %s"
     result = None
     with db.cursor() as cursor:

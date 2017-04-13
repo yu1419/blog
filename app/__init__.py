@@ -1,10 +1,7 @@
 from flask import Flask
-from flask_login import login_user, logout_user, login_required, LoginManager, current_user
+from flask_login import LoginManager
 import os
-from flask import Flask, render_template, session
-from flask import redirect, url_for, flash, request
 from flask_bootstrap import Bootstrap
-from .database.connect_db import get_db
 from flask_pagedown import PageDown
 from flaskext.markdown import Markdown
 import markdown
@@ -12,7 +9,7 @@ from flask import Markup
 from .database import db
 from .helper import *
 from .models import AnonymousUser
-from flask_mail import Mail, Message
+from flask_mail import Mail
 from .fake_data import fake_data
 
 login_manager = LoginManager()
@@ -22,25 +19,34 @@ bootstrap = Bootstrap()
 
 
 def id_to_username(user_id):
+    # add to jinji environment
+    # convert user_id to user name
     sql = "select user_name from user where user_id = %s"
+    user_name = None
     with db.cursor() as cursor:
-        cursor.execute(sql, (user_id, ))
-        return cursor.fetchone()
+        cursor.execute(sql, (user_id,))
+        result = cursor.fetchone()
+        if result:
+            user_name = result["user_name"]
+    return user_name
 
 
 def create_app(add_fake=False):
     app = Flask(__name__)
     Markdown(app)
     login_manager.anonymous_user = AnonymousUser
+
     app.config['MAIL_SERVER'] = 'smtp.googlemail.com'
     app.config['MAIL_PORT'] = 587
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = os.environ.get('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.environ.get('MAIL_PASSWORD')
     app.config['SECRET_KEY'] = 'hard to guess string'
-    app.jinja_env.globals['id_to_username'] = id_to_username
+
     app.jinja_env.globals['markdown'] = markdown
     app.jinja_env.globals['Markup'] = Markup
+
+    app.jinja_env.globals['id_to_username'] = id_to_username
 
     bootstrap.init_app(app)
     mail.init_app(app)
