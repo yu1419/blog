@@ -159,6 +159,12 @@ class UserBase(object):
                 ids.append(item["user_id"])
         return ids
 
+    def delete_post(self, post_id):
+        sql = "delete from post where user_id = %s and post_id = %s"
+        with db.cursor() as cursor:
+            cursor.execute(sql, (self.user_id, post_id))
+            db.commit()
+
     def own_articles(self, page=1):
         ignore = (page - 1) * count_per_page
         sql = "select * from post, user where post.user_id = %s and post.user_id=\

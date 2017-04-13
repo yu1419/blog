@@ -7,6 +7,13 @@ from .forms import UserForm, PostForm
 from ..helper import id_to_username
 
 
+@member.route("/delete/<int:post_id>", methods=['GET', 'POST'])
+@login_required
+def delete_post(post_id):
+    current_user.delete_post(post_id)
+    return redirect(request.referrer)
+
+
 @member.route("/follow/<int:user_id>", methods=['GET', 'POST'])
 def follow(user_id):
     if current_user.is_authenticated:

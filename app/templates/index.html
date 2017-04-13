@@ -76,6 +76,9 @@ $(document).ready(function(){
           <a class="follow_link" href="{{url_for("member.follow",user_id=blog["user_id"])}}">Follow</a>
         {% endif %}
       {% endif %}
+     {% if current_user.is_authenticated and current_user.user_id == blog["user_id"] %}
+          <a class="delete_post_link" href="{{url_for("member.delete_post",post_id=blog["post_id"])}}">Delete Post</a>
+      {% endif %}
       </div>
       <div class="pre_time">
       {{blog["post_time"]}}
