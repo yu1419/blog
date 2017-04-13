@@ -3,10 +3,12 @@ from .database import db
 from werkzeug.security import generate_password_hash
 import random
 
-#  important !!
+#  important !!!
 #  add to lorem_ipsum.py    :
 # import sys
 # if sys.version_info.major >= 3:xrange = range
+
+
 
 
 USER_count = 100
