@@ -41,6 +41,14 @@ $(document).ready(function(){
     </div>
 {% if current_user.is_authenticated and current_user.user_id == post["user_id"] %}
 <a class="update_post" href="{{url_for("member.edit_post",post_id=post["post_id"])}}">Update post</a>
+{% else %}
+
+       {% if current_user.is_following(post["user_id"]) %}
+          <a class="unfollow_link" href="{{url_for("member.un_follow",user_id=post["user_id"])}}">Unfollow</a>
+        {% else %}
+          <a class="follow_link" href="{{url_for("member.follow",user_id=post["user_id"])}}">Follow</a>
+        {% endif %}
+
 {% endif %}
 
 
