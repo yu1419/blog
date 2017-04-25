@@ -6,7 +6,7 @@ from flask_pagedown import PageDown
 from flaskext.markdown import Markdown
 import markdown
 from flask import Markup
-from .database import db
+from .database import db, get_db
 from .helper import *
 from .models import AnonymousUser
 from flask_mail import Mail

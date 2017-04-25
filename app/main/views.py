@@ -1,10 +1,18 @@
 from . import main
+from .. import db, get_db
 from ..models import Single_post_model, UserBase
 from flask import render_template, session, jsonify, redirect, url_for,\
                   flash, request
 from flask_login import current_user
 from ..helper import convert_id, user_basic, id_to_username, name_to_id
 from .forms import CommentForm, UserForm
+
+
+@main.errorhandler(500)
+def internal_erro(e):
+    global db
+    db = get_db()
+    return render_template("500.html")
 
 
 @main.route("/")
