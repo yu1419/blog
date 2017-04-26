@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+#R
+.Rhistory
 # C extensions
 
 # Distribution / packaging
