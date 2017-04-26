@@ -1,5 +1,5 @@
 # Blog Powered by Flask
-[My Blog](http://http://sample-env.wug4qkqjbi.us-east-1.elasticbeanstalk.com/)
+[My Blog](http://sample-env.wug4qkqjbi.us-east-1.elasticbeanstalk.com/)
 > This blog is powered by flask. And MySQL is choosen to be used as database.  
 Anybody can registered as a member, you can post Markdown blogs, and follow others and comment on the blogs.  
 Fake users and posts are created. 
