@@ -60,7 +60,7 @@ $(document).ready(function(){
 		<div>
 		<a class="author_link comment_author" href="{{url_for("main.user_post",user_id=comment["user_id"])}}">{{comment["user_name"]}}</a>:
 		{% if comment["reply_to_id"] %}
-		@<a class="replied_author_link"  href="{{url_for("main.user_post",user_id=comment["reply_to_id"])}}">{{id_to_username(comment["reply_to_id"])["user_name"]}}</a>
+		@<a class="replied_author_link"  href="{{url_for("main.user_post",user_id=comment["reply_to_id"])}}">{{id_to_username(comment["reply_to_id"])}}</a>
 		{% endif %}
 		{{Markup(markdown.markdown(comment["comment_content"]))}}
 		</div>
