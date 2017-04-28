@@ -19,6 +19,7 @@ bootstrap = Bootstrap()
 
 
 def id_to_username(user_id):
+    db = get_db()
     # add to jinji environment
     # convert user_id to user name
     sql = "select user_name from user where user_id = %s"
@@ -28,6 +29,7 @@ def id_to_username(user_id):
         result = cursor.fetchone()
         if result:
             user_name = result["user_name"]
+    db.close()
     return user_name
 
 

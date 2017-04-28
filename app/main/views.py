@@ -96,7 +96,9 @@ def post_byID(post_id):
     form = CommentForm()
     if form.validate_on_submit():
         if current_user.is_authenticated:
+
             reply_to_name = (request.form.get("reply_to_name", None))
+
             reply_to_id = name_to_id(reply_to_name)
             current_user.add_comment(reply_to_id=reply_to_id, post_id=post_id,
                                      comment_content=form.pagedown.data)

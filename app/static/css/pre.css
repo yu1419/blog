@@ -3,7 +3,9 @@ body {
  min-height:100vh;
  background-color: hsla(210, 50%, 35%, 0.1);
 }
-
+.hide{
+  display:none;
+}
 #followed_users{
   display:none;
 }

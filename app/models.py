@@ -1,5 +1,5 @@
 # coding: utf-8
-from . import db
+from . import db, get_db
 from flask_login import UserMixin, AnonymousUserMixin
 from .generate_password import general_random_password, valid_login
 from werkzeug.security import generate_password_hash
@@ -9,6 +9,8 @@ count_per_page = 5
 
 
 class AnonymousUser(AnonymousUserMixin):
+    global db
+    db = get_db()
 
     def show_articles(self, page=1):
         # show index page articles, which contains blogs posted by everyone
@@ -39,10 +41,12 @@ class AnonymousUser(AnonymousUserMixin):
 
 
 class UserBase(object):
+    global db
+    db = get_db()
     def __init__(self, id):
         # initial userbase by email, because user use email to log in
         self.id = id
-        self._update_userid() # get user_id
+        self._update_userid()  # get user_id
 
     def _update_userid(self):
         sql = "select user_id from user where email = %s"
@@ -116,8 +120,6 @@ class UserBase(object):
                 return True
         else:
             if not new_name == self.info()["user_name"]:
-                print(new_name)
-                print(self.info()["user_name"])
                 return False
             else:
                 return True
@@ -249,6 +251,8 @@ class User(UserBase, UserMixin):
 
 
 class Single_post_model(object):
+    global db
+    db = get_db()
     def __init__(self, post_id):
         self.post_id = post_id
 
